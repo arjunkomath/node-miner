@@ -1,0 +1,21 @@
+{
+  "name": "miner",
+  "version": "0.0.1",
+  "description": "Mining helper for profit switching",
+  "main": "./run.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node run.js"
+  },
+  "bin": {
+    "miner": "./run.js"
+  },
+  "keywords": [],
+  "author": "Arjun Komath<arjun@hey.com>",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "chalk": "^4.1.1",
+    "crypto-price": "^0.0.6"
+  }
+}

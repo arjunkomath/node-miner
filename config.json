@@ -1,0 +1,14 @@
+{
+  "coins": [
+    {
+      "symbol": "DOGE",
+      "algo": "ethash",
+      "cmd": "/home/arjun/miners/lolminer/lolMiner --algo ETHASH --pool ethash.unmineable.com:3333 --user DOGE:DLQrbaHzquKRJSjedcHgnZer8R3rizrgns.1080rig --ethstratum ETHPROXY"
+    },
+    {
+      "symbol": "ETH",
+      "algo": "ethash",
+      "cmd": "/home/arjun/miners/lolminer/lolMiner --algo ETHASH --pool ethash.unmineable.com:3333 --user ETH:0xf39a2020db55624f147cd33019e1c70f5b7675f0.1080rig --ethstratum ETHPROXY"
+    }
+  ]
+}
