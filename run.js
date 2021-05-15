@@ -12,8 +12,7 @@ const { getCryptoPrice } = require("crypto-price");
 console.log(chalk.blue.bold("Staring Node Miner", version));
 console.log(chalk.blue.bold(`Found ${config.coins.length} coins`));
 
-let miner = null;
-let currentCoin = config.coins[0];
+let miner, currentCoin;
 
 const runMiner = (cmd) =>
   new Promise((resolve, reject) => {
@@ -109,8 +108,10 @@ const checkProfit = async () => {
   }
 };
 
+// Start
 start(config.coins[0]);
 
+// Poll
 setInterval(() => {
   checkProfit();
 }, config.profitCheckInterval * 60000);
