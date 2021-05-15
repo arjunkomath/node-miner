@@ -1,6 +1,10 @@
 # Node Miner
 Mining helper for profit switching
 
+Start mining ETH -> https://unmineable.com/?ref=od39-jadb
+
+Start mining DOGE -> https://unmineable.com/?ref=bzvg-qax5
+
 ## Configuration
 
 | Options  | Description |
