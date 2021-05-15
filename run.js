@@ -9,8 +9,8 @@ const { spawn } = require("child_process");
 const { calculateReward, sendNotification } = require("./helpers");
 const { getCryptoPrice } = require("crypto-price");
 
-console.log(chalk.blue("Staring Node Miner", version));
-console.log(chalk.blue(`Found ${config.coins.length} coins`));
+console.log(chalk.blue.bold("Staring Node Miner", version));
+console.log(chalk.blue.bold(`Found ${config.coins.length} coins`));
 
 let miner = null;
 let currentCoin = config.coins[0];
@@ -62,27 +62,45 @@ const checkProfit = async () => {
     console.log(chalk.whiteBright("Checking profit for", coin.symbol));
 
     const reward = await calculateReward(coin.symbol, coin.algo, 21);
-    // console.log("reward", reward.per_day);
-    const currentPrice = await getCryptoPrice("USD", coin.symbol);
-    // console.log("price", currentPrice.price);
+    const currentPrice = await getCryptoPrice(config.baseCurrency, coin.symbol);
+
     const earningPerDay = reward.per_day * Number(currentPrice.price);
-    console.log("Current earning / day", coin.symbol, earningPerDay);
+    console.log(
+      chalk.whiteBright(
+        `$/day [${config.baseCurrency}] -> `,
+        coin.symbol,
+        earningPerDay
+      )
+    );
+
     if (earningPerDay > bestPrice) {
       bestPrice = earningPerDay;
       bestCoin = coin;
     }
   }
 
-  console.log("Winner", bestCoin.symbol);
-
-  if (currentCoin.symbol !== bestCoin.symbol) {
+  // Stop mining if profit is less than threshold
+  if (bestPrice < config.minProfitThreshold) {
+    console.log(chalk.white.bold("Suspending miner"));
     await killMiner();
-    start(bestCoin);
+  } else {
+    if (currentCoin.symbol !== bestCoin.symbol) {
+      console.log(
+        chalk.BackgroundColor.whiteBright.greenBright.bold(
+          "We've a new winner",
+          bestCoin.symbol
+        )
+      );
+      await killMiner();
+      start(bestCoin);
 
-    await sendNotification(
-      "FYI: Switching miner",
-      bestCoin.symbol + " is more profitable"
-    );
+      await sendNotification(
+        "FYI: Switching miner",
+        bestCoin.symbol + " is more profitable"
+      );
+    } else {
+      console.log(chalk.white.bold("Continue mining", currentCoin.symbol));
+    }
   }
 };
 
@@ -90,4 +108,4 @@ start(config.coins[0]);
 
 setInterval(() => {
   checkProfit();
-}, 5 * 60000);
+}, config.profitCheckInterval * 60000);
