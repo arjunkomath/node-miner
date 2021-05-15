@@ -11,6 +11,7 @@
       "cmd": "/home/arjun/miners/lolminer/lolMiner --algo ETHASH --pool ethash.unmineable.com:3332 --user DOGE:DLQrbaHzquKRJSjedcHgnZer8R3rizrgns.1080rig --ethstratum ETHPROXY"
     }
   ],
+  "avgHashRateMh": 21,
   "baseCurrency": "USD",
   "profitCheckInterval": 1,
   "minProfitThreshold": 2

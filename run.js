@@ -21,20 +21,21 @@ const runMiner = (cmd) =>
     miner = spawn(command[0], command.slice(1, command.length));
 
     miner.stdout.on("data", (data) => {
-      console.log(`stdout: ${data}`);
+      console.log(`Miner stdout: ${data}`);
     });
 
     miner.stderr.on("data", (data) => {
-      console.log(`stderr: ${data}`);
+      console.log(`Miner stderr: ${data}`);
     });
 
-    miner.on("error", (error) => {
-      console.log(`error: ${error.message}`);
+    miner.on("error", async (error) => {
+      console.log(`Miner error: ${error.message}`);
+      await sendNotification("Miner has errored", error.message);
       reject(error);
     });
 
     miner.on("close", (code) => {
-      console.log(`child process exited with code ${code}`);
+      console.log(`Miner child process exited with code ${code}`);
       resolve();
     });
   });
@@ -61,7 +62,11 @@ const checkProfit = async () => {
     coin = config.coins[i];
     console.log(chalk.whiteBright("Checking profit for", coin.symbol));
 
-    const reward = await calculateReward(coin.symbol, coin.algo, 21);
+    const reward = await calculateReward(
+      coin.symbol,
+      coin.algo,
+      config.avgHashRateMh
+    );
     const currentPrice = await getCryptoPrice(config.baseCurrency, coin.symbol);
 
     const earningPerDay = reward.per_day * Number(currentPrice.price);
@@ -95,7 +100,7 @@ const checkProfit = async () => {
       start(bestCoin);
 
       await sendNotification(
-        "FYI: Switching miner",
+        "Switching Coin",
         bestCoin.symbol + " is more profitable"
       );
     } else {
@@ -109,3 +114,9 @@ start(config.coins[0]);
 setInterval(() => {
   checkProfit();
 }, config.profitCheckInterval * 60000);
+
+process.on("uncaughtException", async (err) => {
+  await sendNotification("Process has crashed", err.message);
+  console.error("There was an uncaught error", err);
+  process.exit(1); //mandatory (as per the Node docs)
+});

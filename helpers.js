@@ -18,7 +18,7 @@ const sendNotification = async (title, body) => {
   }
 
   return axios.get(
-    `https://push.techulus.com/api/v1/notify/${process.env.PUSH_KEY}?title=${title}&body=${body}`
+    `https://push.techulus.com/api/v1/notify/${process.env.PUSH_KEY}?title=[NM] ${title}&body=${body}`
   );
 };
 
